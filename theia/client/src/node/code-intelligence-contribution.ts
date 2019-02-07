@@ -38,12 +38,12 @@ export class CodeIntelligenceContribution extends BaseLanguageServerContribution
         );
 
         try {
-            console.log('Starting Code Intelligence language server.');
+            console.log('Starting Microclimate Language Server for Node.js Profiling.');
             const serverConnection = this.createProcessStreamConnection(command, args);
             serverConnection.reader.onError(err => {
                 console.log(err);
              });
-            console.log('Stared Code Intelligence language server.');
+            console.log('Stared Microclimate Language Server for Node.js Profiling.');
             console.dir(serverConnection);
             this.forward(clientConnection, serverConnection);
         } catch (error) {

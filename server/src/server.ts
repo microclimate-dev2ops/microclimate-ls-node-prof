@@ -19,7 +19,6 @@ import {
   DidChangeConfigurationNotification,
   DidChangeConfigurationParams,
   DidOpenTextDocumentParams,
-  ExecuteCommandParams,
   InitializeParams,
   ProposedFeatures,
   TextDocumentItem,

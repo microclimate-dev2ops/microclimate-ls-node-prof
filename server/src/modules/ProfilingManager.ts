@@ -17,10 +17,30 @@ import {
 } from 'vscode-languageserver';
 import Tree from './Tree';
 import TreeNode from './TreeNode';
+import {
+  TreeNodeMap,
+} from './types';
 
-interface TreeMap { [_: string]: Tree; }
+interface DisplayNode {
+  line: number;
+  name: string;
+  count: number;
+  parents: DisplayParentMap;
+}
+
+interface DisplayParent {
+  file: string;
+  line: number;
+  name: string;
+  count: number;
+}
+
+type TreeMap = Map<string, Tree>;
+type DisplayNodeMap = Map<string, DisplayNode>;
+type DisplayParentMap = Map<string, DisplayParent>;
+
 export default class ProfilingManager {
-  private trees: TreeMap = {};
+  private trees: TreeMap = new Map();
   private connection: Connection;
 
   constructor(connection: Connection) {
@@ -32,12 +52,9 @@ export default class ProfilingManager {
     profilingPath: string,
     hasDiagnosticRelatedInformationCapability: boolean,
   ): Diagnostic[] {
-    // TODO convert the file path correctly
     const removePattern: RegExp = /.*\/microclimate-workspace\/[A-z0-9-_]+\//;
     const localPath: string = removePattern.exec(codePath)[0];
     const appCodePath: string = codePath.replace(removePattern, '/app/');
-
-    // TODO check whether file needs to be parsed again or if it has already been read
 
     // read file into tree
     const start: number = Date.now();
@@ -49,13 +66,13 @@ export default class ProfilingManager {
   }
 
   private findOrCreateTree(profilingPath: string): Tree {
-    if (this.trees[profilingPath]) {
-      return this.trees[profilingPath];
+    if (this.trees.get(profilingPath)) {
+      return this.trees.get(profilingPath);
     }
     const treeRoot: TreeNode = new TreeNode(0, '(root)', '', 0, 0);
     const tree: Tree = new Tree(treeRoot);
     this.parse(tree, `${profilingPath}/profiling.json`);
-    this.trees[profilingPath] = tree;
+    this.trees.set(profilingPath, tree);
     return tree;
   }
 
@@ -69,57 +86,45 @@ export default class ProfilingManager {
     try {
       // Merge counts where function is directly called by the same
       // parent even if there are differences further up the stack.
-      interface DisplayNode {
-        line: number;
-        name: string;
-        count: number;
-        parents: TreeNode[];
-      }
-      interface DisplayParent {
-        file: string;
-        line: number;
-        name: string;
-        count: number;
-      }
-      const displayNodes: { [index: string]: DisplayNode } = Object.create(null);
+      const displayNodes: DisplayNodeMap = new Map();
       for (const node of nodes) {
         // Until we add child counts, ignore functions with no
         // direct ticks.
-        if (node.count == 0) continue;
+        if (node.count === 0) { continue; }
         const functionKey: string = `${node.name}:${node.line}`;
-        let displayNode: DisplayNode = displayNodes[functionKey];
-        if (displayNode == null) {
+        let displayNode: DisplayNode = displayNodes.get(functionKey);
+        if (!displayNode) {
           displayNode = {
             count: 0,
             line: node.line,
             name: node.name,
-            parents: [],
+            parents: new Map(),
           };
-          displayNodes[functionKey] = displayNode;
+          displayNodes.set(functionKey, displayNode);
         }
         displayNode.count += node.count;
         const parentNode: TreeNode = node.parentNode;
         const parentKey: string = `${parentNode.file}:${parentNode.name}:${parentNode.line}`;
-        let parentDisplayNode: DisplayParent = displayNode.parents[parentKey];
-        if (parentDisplayNode == null) {
+        let parentDisplayNode: DisplayParent = displayNode.parents.get(parentKey);
+        if (!parentDisplayNode) {
           parentDisplayNode = {
             count: 0,
             file: parentNode.file,
             line: parentNode.line,
             name: parentNode.name,
           };
-          displayNode.parents[parentKey] = parentDisplayNode;
+          displayNode.parents.set(parentKey, parentDisplayNode);
         }
         // We are counting the number of calls to *this* function from the parent
         // in this stack. (We don't want to use the parent count here.)
         parentDisplayNode.count += node.count;
       }
 
-      for (const displayNodeKey of Object.keys(displayNodes)) {
-        const displayNode: DisplayNode = displayNodes[displayNodeKey];
+      for (const displayNode of displayNodes.values()) {
         const functionName: string = displayNode.name ? displayNode.name + '()' : '<anonymous function>';
-        const displayNodePercentage = (displayNode.count * 100.0) / tree.root.childCount;
-        const message: string = `Function ${functionName} was the running function in ${displayNodePercentage.toFixed(2)}% of samples.`;
+        const displayNodePercentage: number = (displayNode.count * 100.0) / tree.root.childCount;
+        const message: string =
+            `Function ${functionName} was the running function in ${displayNodePercentage.toFixed(2)}% of samples.`;
         const diagnostic: Diagnostic = {
           message,
           range: {
@@ -135,10 +140,11 @@ export default class ProfilingManager {
           if (!diagnostic.relatedInformation) {
             diagnostic.relatedInformation = [];
           }
-          for (const displayParentNodeKey of Object.keys(displayNode.parents)) {
-            const displayParentNode: DisplayParent = displayNode.parents[displayParentNodeKey];
-            const parentFunctionName: string = displayParentNode.name ? displayParentNode.name + '()' : '<anonymous function>';
-            const parentPercentage = (displayParentNode.count * 100.0) / displayNode.count
+          for (const displayParentNode of displayNode.parents.values()) {
+            const parentFunctionName: string = displayParentNode.name ?
+                                        displayParentNode.name + '()' :
+                                        '<anonymous function>';
+            const parentPercentage: number = (displayParentNode.count * 100.0) / displayNode.count;
             diagnostic.relatedInformation.push(
               {
                 location: {
@@ -174,9 +180,9 @@ export default class ProfilingManager {
   }
 
   private addSample(tree: Tree, profilingRow: any): void {
-    const indexedNodes: { [index: string]: TreeNode } = {};
+    const indexedNodes: TreeNodeMap = new Map();
     // Index this so we can find parents faster.this.files
-    profilingRow.functions.map((node: TreeNode) => { indexedNodes[node.self] = node; });
+    profilingRow.functions.map((node: TreeNode) => { indexedNodes.set(node.self, node); });
 
     // for each node
     for (const fnDetails of profilingRow.functions) {
