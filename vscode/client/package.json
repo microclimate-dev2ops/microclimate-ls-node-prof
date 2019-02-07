@@ -1,0 +1,26 @@
+{
+	"name": "microclimate-language-server-client",
+	"description": "Client for development of the Microclomate Language Server",
+	"author": "IBM",
+	"license": "",
+	"version": "0.0.1",
+	"publisher": "IBM",
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+	},
+	"engines": {
+		"vscode": "^1.25.0"
+	},
+	"scripts": {
+		"update-vscode": "vscode-install",
+		"postinstall": "vscode-install",
+		"prepare-tests": "echo $(rm -rf ./out/test/microclimate-workspace) && cp -R ./src/test/microclimate-workspace ./out/test/microclimate-workspace"
+	},
+	"dependencies": {
+		"vscode-languageclient": "^4.1.4"
+	},
+	"devDependencies": {
+		"vscode": "^1.1.21"
+	}
+}

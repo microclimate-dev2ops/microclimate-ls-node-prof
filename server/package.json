@@ -1,0 +1,26 @@
+{
+	"name": "microclimate-language-server",
+	"description": "Microclimate Language Server for Code Intelligence work",
+	"version": "0.0.1",
+	"author": "IBM",
+	"license": "",
+	"engines": {
+		"node": "*"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+	},
+	"dependencies": {
+		"@types/node": "^10.12.18",
+		"fs-extra": "^7.0.1",
+		"typescript": "^3.2.2",
+		"vscode-languageserver": "^4.1.3"
+	},
+	"scripts": {
+		"prepare": "yarn run clean && yarn run build",
+		"clean": "rm -rf lib",
+		"build": "tsc",
+		"watch": "tsc -w"
+	}
+}

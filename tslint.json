@@ -1,0 +1,12 @@
+{
+	"extends": "tslint:recommended",
+	"rules": {
+		"arrow-parens": false,
+		"quotemark": [true, "single"],
+		"indent": [true, "spaces"],
+		"semicolon": [true, "always"],
+		"interface-name": false,
+		"no-console": false,
+		"typedef": [true, "call-signature", "arrow-call-signature", "parameter", "arrow-parameter", "property-declaration", "variable-declaration", "member-variable-declaration", "object-destructuring", "array-destructuring"]
+	}
+}

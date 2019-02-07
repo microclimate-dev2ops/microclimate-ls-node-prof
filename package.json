@@ -1,0 +1,21 @@
+{
+	"name": "microclimate-code-intelligence",
+	"description": "Client for development of the Microclomate Language Server",
+	"author": "IBM",
+	"license": "",
+	"version": "0.0.1",
+	"publisher": "IBM",
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+	},
+	"engines": {
+		"vscode": "^1.25.0"
+	},
+	"scripts": {
+		"vscode:prepublish": "cd vscode && npm run vscode:prepublish",
+		"compile": "cd vscode && npm run compile",
+		"watch": "cd vscode && npm run watch",
+		"postinstall": "cd vscode && npm run postinstall"
+	}
+}

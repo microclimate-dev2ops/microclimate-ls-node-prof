@@ -1,0 +1,71 @@
+{
+	"name": "microclimate-code-intelligence",
+	"description": "Adding inner-loop functionality to Microclimate",
+	"author": "IBM",
+	"license": "IBM",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+	},
+	"publisher": "IBM",
+	"engines": {
+		"vscode": "^1.25.0"
+	},
+	"activationEvents": [
+		"*",
+		"onCommand:extension.toggleProfiling"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.toggleProfiling",
+				"title": "Toggle Profiling",
+				"category": "Code Intelligence"
+			}
+		],
+		"configuration": {
+			"type": "object",
+			"title": "Microclimate Profiling Configuration",
+			"properties": {
+				"microclimateProfiling.showProfiling": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Whether the method profiling information should be displayed in the editor pane."
+				},
+				"microclimateProfiling.profilingfolder": {
+					"scope": "resource",
+					"type": "string",
+					"default": "load-test",
+					"description": "The folder name containing load-test results files."
+				},
+				"microclimateProfiling.trace.server": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "cd client && npm run update-vscode && cd .. && npm run compile",
+		"compile": "tsc -b",
+		"watch": "tsc -b -w",
+		"postinstall": "cd client && npm install && cd ../../server && npm install && cd ../vscode",
+		"prepare-tests": "cd client && npm run prepare-tests"
+	},
+	"devDependencies": {
+		"@types/mocha": "^5.2.0",
+		"@types/node": "^8.10.39",
+		"tslint": "^5.11.0",
+		"typescript": "^3.1.3"
+	}
+}
