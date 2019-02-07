@@ -8,6 +8,7 @@
  ******************************************************************************/
 
 import TreeNode from './TreeNode';
+import { TreeNodeMap } from './types';
 
 export default class Tree {
   public nodes: TreeNode[] = [];
@@ -17,14 +18,14 @@ export default class Tree {
   // hasOwnProperty. (We may want to add a field called
   // hasOwnProperty as the profiler lists it as the file
   // containing that function.)
-  private files: {} = Object.create(null);
+  private files: Map<string, TreeNode[]> = new Map();
 
   constructor(root: TreeNode) {
     this.root = root;
     this.addToAllNodes(root);
   }
 
-  public addOrUpdateNode(profileNode: TreeNode, index: {}): void {
+  public addOrUpdateNode(profileNode: TreeNode, index: TreeNodeMap): void {
     // if the node is the root node then simply update the count
     if (TreeNode.nodesMatch(this.root, profileNode)) {
       this.root.count += profileNode.count;
@@ -38,7 +39,7 @@ export default class Tree {
 
     while (currentNode) {
       path.push(currentNode);
-      currentNode = index[currentNode.parent];
+      currentNode = index.get(currentNode.parent);
     }
     path.reverse();
 
@@ -80,7 +81,7 @@ export default class Tree {
   }
 
   public filterFromFile(path: string): TreeNode[] {
-    return this.files[path] || [];
+    return this.files.get(path) || [];
   }
 
   private addToAllNodes(node: TreeNode): void {
@@ -88,8 +89,8 @@ export default class Tree {
     // add child to parent node
     if (node.parentNode) { node.parentNode.children.push(node); }
     // add to indexes
-    this.files[node.file] ? this.files[node.file].push(node)
-                                       : this.files[node.file] = [node];
+    this.files.has(node.file) ? this.files.get(node.file).push(node)
+                              : this.files.set(node.file, [node]);
 
     this.maxDepth = Math.max(this.maxDepth, node.depth);
   }

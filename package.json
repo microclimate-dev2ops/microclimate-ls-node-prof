@@ -1,10 +1,26 @@
 {
-	"name": "microclimate-code-intelligence",
-	"description": "Client for development of the Microclomate Language Server",
+	"name": "microclimate-ls-node-prof",
+	"displayName": "Microclimate Language Server for Node.js Profiling",
+	"description": "Provides code highlighting showing relative time spent in JavaScript functions based on profiling data gathered through Microclimate Load Testing.",
+	"version": "0.1.0",
 	"author": "IBM",
-	"license": "",
-	"version": "0.0.1",
 	"publisher": "IBM",
+	"license": "EPL-2.0",
+	"categories": [
+		"Programming Languages",
+		"Debuggers",
+		"Other"
+	],
+	"keywords": [
+		"Microclimate",
+		"Profiling",
+		"JavaScript",
+		"Load",
+		"Load Run",
+		"IBM"
+	],
+	"icon": "res/img/microclimate.png",
+	"homepage": "https://github.ibm.com/dev-ex/code-intelligence/blob/master/README.md",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/dev-ex/code-intelligence"
@@ -12,10 +28,70 @@
 	"engines": {
 		"vscode": "^1.25.0"
 	},
+	"activationEvents": [
+		"onLanguage:javascript",
+		"onCommand:extension.toggleProfiling"
+	],
+	"main": "./vscode/client/out/extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.toggleProfiling",
+				"title": "Toggle Profiling",
+				"category": "Microclimate Profiling"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "extension.toggleProfiling",
+					"group": "2_microclimate@1"
+				}
+			]
+		},
+		"configuration": {
+			"type": "object",
+			"title": "Microclimate Profiling Configuration",
+			"properties": {
+				"microclimateProfiling.showProfiling": {
+					"scope": "resource",
+					"type": "boolean",
+					"default": true,
+					"description": "Whether the method profiling information should be displayed in the editor pane."
+				},
+				"microclimateProfiling.profilingfolder": {
+					"scope": "resource",
+					"type": "string",
+					"default": "load-test",
+					"description": "The folder name containing load-test results files."
+				},
+				"microclimateProfiling.trace.server": {
+					"scope": "resource",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				}
+			}
+		}
+	},
 	"scripts": {
-		"vscode:prepublish": "cd vscode && npm run vscode:prepublish",
-		"compile": "cd vscode && npm run compile",
-		"watch": "cd vscode && npm run watch",
-		"postinstall": "cd vscode && npm run postinstall"
+		"vscode:prepublish": "cd vscode/client && npm run update-vscode && cd ../.. && npm run compile",
+		"compile:client": "tsc -p ./vscode/client/tsconfig.json",
+		"compile:server": "tsc -p ./server/tsconfig.json",
+		"watch:client": "tsc -w -p ./vscode/client/tsconfig.json",
+		"watch:server": "tsc -w -p ./server/tsconfig.json",
+		"watch": "tsc -b -w ./vscode/client/tsconfig.json ./server/tsconfig.json",
+		"compile": "npm run compile:client && npm run compile:server",
+		"postinstall": "cd vscode/client && npm install && cd ../../server && npm install && cd .."
+	},
+	"devDependencies": {
+		"@types/mocha": "^5.2.5",
+		"@types/node": "^10.12.21",
+		"typescript": "^3.1.1"
 	}
 }

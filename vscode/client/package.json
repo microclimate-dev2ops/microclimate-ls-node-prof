@@ -1,10 +1,10 @@
 {
-	"name": "microclimate-language-server-client",
-	"description": "Client for development of the Microclomate Language Server",
+	"name": "microclimate-ls-node-prof-vscode-client",
+	"description": "VSCode Client for the Microclomate Language Server for Node.js profiling",
+	"version": "0.1.0",
 	"author": "IBM",
-	"license": "",
-	"version": "0.0.1",
 	"publisher": "IBM",
+	"license": "EPL-2.0",
 	"repository": {
 		"type": "git",
 		"url": "https://github.ibm.com/dev-ex/code-intelligence"

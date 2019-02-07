@@ -14,7 +14,6 @@ import {
   Disposable,
   LanguageClient,
   LanguageClientOptions,
-  RequestType,
   ServerOptions,
   TransportKind,
 } from 'vscode-languageclient';
@@ -67,7 +66,7 @@ export function activate(context: ExtensionContext): void {
     // client.sendRequest()
 
     window.showInformationMessage(
-      `Code Intelligence: Method profiling ${ newShowProfiling ? 'enabled' : 'disabled' }.`,
+      `Microclimate Profiling: Method profiling ${ newShowProfiling ? 'enabled' : 'disabled' }.`,
     );
   });
 
