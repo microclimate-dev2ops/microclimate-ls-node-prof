@@ -1,5 +1,5 @@
 {
-	"name": "microclimate-language-server",
+	"name": "microclimate-ls-node-prof-server",
 	"description": "Microclimate Language Server for Code Intelligence work",
 	"version": "0.0.1",
 	"author": "IBM",
@@ -9,7 +9,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+		"url": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof"
 	},
 	"dependencies": {
 		"@types/node": "^8.10.39",

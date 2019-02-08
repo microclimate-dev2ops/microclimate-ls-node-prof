@@ -20,10 +20,10 @@
 		"IBM"
 	],
 	"icon": "res/img/microclimate.png",
-	"homepage": "https://github.ibm.com/dev-ex/code-intelligence/blob/master/README.md",
+	"homepage": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof/blob/master/README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.ibm.com/dev-ex/code-intelligence"
+		"url": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof"
 	},
 	"engines": {
 		"vscode": "^1.25.0"
