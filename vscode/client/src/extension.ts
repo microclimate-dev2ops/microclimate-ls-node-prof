@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 import * as path from 'path';
-import { commands, ExtensionContext, window, workspace, WorkspaceConfiguration } from 'vscode';
+import { commands, ExtensionContext, window, workspace, WorkspaceConfiguration, StatusBarAlignment, StatusBarItem } from 'vscode';
 
 import {
   Disposable,
@@ -17,6 +17,10 @@ import {
   ServerOptions,
   TransportKind,
 } from 'vscode-languageclient';
+
+const CONFIG_SECTION: string = 'microclimateProfiling';
+const CONFIG_SHOW_PROFILING: string = 'showProfiling';
+const TOGGLE_COMMAND_ID: string = 'extension.toggleProfiling';
 
 let client: LanguageClient;
 
@@ -57,18 +61,22 @@ export function activate(context: ExtensionContext): void {
     clientOptions,
   );
 
-  const disposable: Disposable = commands.registerCommand('extension.toggleProfiling', () => {
+  const disposable: Disposable = commands.registerCommand(TOGGLE_COMMAND_ID, () => {
     // The code you place here will be executed every time your command is executed
-    const config: WorkspaceConfiguration = workspace.getConfiguration('microclimateProfiling');
-    const newShowProfiling: boolean = !config.get('showProfiling');
-    config.update('showProfiling', newShowProfiling);
+    const newShowProfiling: boolean = !isShowProfiling();
+    const config: WorkspaceConfiguration = workspace.getConfiguration(CONFIG_SECTION);
+    config.update(CONFIG_SHOW_PROFILING, newShowProfiling);
     // const req: RequestType<
     // client.sendRequest()
+    setStatusBarMessage(newShowProfiling);
 
     window.showInformationMessage(
       `Microclimate Profiling: Method profiling ${ newShowProfiling ? 'enabled' : 'disabled' }.`,
     );
   });
+
+  // do this AFTER registering the toggle command
+  setStatusBarMessage(isShowProfiling());
 
   context.subscriptions.push(disposable);
 
@@ -76,9 +84,34 @@ export function activate(context: ExtensionContext): void {
   client.start();
 }
 
-export function deactivate(): Thenable<void> | undefined {
-  if (!client) {
-    return undefined;
+export async function deactivate(): Promise<void> {
+  if (statusBarItem != null) {
+    statusBarItem.dispose();
   }
-  return client.stop();
+  if (client) {
+    await client.stop();
+  }
+}
+
+function isShowProfiling(): boolean {
+  const config: WorkspaceConfiguration = workspace.getConfiguration(CONFIG_SECTION);
+  return config.get<boolean>(CONFIG_SHOW_PROFILING);
+}
+
+// Persistent statusBarItem shows the user whether or not the extension is active, and can be clicked to toggle.
+// only undefined initially (on activation); will be present the rest of the time.
+let statusBarItem: StatusBarItem | undefined;
+
+function setStatusBarMessage(profilingEnabled: boolean) {
+  if (statusBarItem != null) {
+    statusBarItem.dispose();
+  }
+  // Extensions that show persistent status items like this always do so on the right side.
+  // Priority 1000 is totally arbitrary, I like having it as left as possible.
+  statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 1000);
+  // https://octicons.github.com/icon/dashboard/
+  statusBarItem.text = `$(dashboard) ${profilingEnabled ? "Profiling on " : "Profiling off"}`;
+  statusBarItem.command = TOGGLE_COMMAND_ID;
+  statusBarItem.tooltip = "Click to toggle";
+  statusBarItem.show();
 }
