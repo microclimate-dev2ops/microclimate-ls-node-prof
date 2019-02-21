@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Theia - Microclimate Code Intelligence Langauge Server Support",
   "author": "IBM",
-  "license": "EPL-1.0",
+  "license": "EPL-2.0",
   "scripts": {
     "prepare": "yarn run build",
     "clean": "rimraf ./client/node_modules && rimraf ./server/node_modules",
