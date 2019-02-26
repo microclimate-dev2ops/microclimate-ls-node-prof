@@ -1,7 +1,7 @@
 {
 	"name": "microclimate-ls-node-prof",
 	"displayName": "Microclimate Language Server for Node.js Profiling",
-	"description": "Provides code highlighting showing relative time spent in JavaScript functions based on profiling data gathered through Microclimate Load Testing.",
+	"description": "Code Highlighiting for Microclimate's JavaScript Load Testing",
 	"version": "19.2.0",
 	"author": "IBM",
 	"publisher": "IBM",
@@ -16,14 +16,16 @@
 		"Profiling",
 		"JavaScript",
 		"Load",
-		"Load Run",
 		"IBM"
 	],
 	"icon": "res/img/microclimate.png",
-	"homepage": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof/blob/master/README.md",
+	"homepage": "https://microclimate-dev2ops.github.io/",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof"
+	},
+	"bugs": {
+		"url": "https://github.com/microclimate-dev2ops/microclimate-ls-node-prof/issues"
 	},
 	"engines": {
 		"vscode": "^1.25.0"
