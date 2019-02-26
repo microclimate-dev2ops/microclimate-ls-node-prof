@@ -4,6 +4,8 @@ Annoates your Node.js code with code highlighting for your hottest functions in 
 
 This extension provides code highlighting showing relative time spent in JavaScript functions based on profiling data gathered through Microclimate Load Testing.
 
+![Demonstration of Code Highlighting](res/img/quick-demo.gif)
+
 ## Usage
 
 With Visual Studio Code:
