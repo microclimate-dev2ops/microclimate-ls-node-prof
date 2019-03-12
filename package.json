@@ -1,7 +1,7 @@
 {
 	"name": "microclimate-ls-node-prof",
 	"displayName": "Microclimate Language Server for Node.js Profiling",
-	"description": "Code Highlighiting for Microclimate's JavaScript Load Testing",
+	"description": "Code Highlighting for Microclimate's JavaScript Load Testing",
 	"version": "19.2.0",
 	"author": "IBM",
 	"publisher": "IBM",

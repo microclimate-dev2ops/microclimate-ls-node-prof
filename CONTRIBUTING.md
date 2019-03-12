@@ -4,7 +4,7 @@
 
 With Visual Studio Code:
 
-- Clone this repsitory locally.
+- Clone this repository locally.
 - Run `npm install` in the cloned `microclimate-ls-node-prof` folder. This installs all necessary npm modules in both the client and server folder
 - Open the clone of this repository in Visual Studio Code.
 - Press Ctrl+Shift+B (Cmd+Shift+B on Mac) to compile the client and server.
@@ -23,7 +23,7 @@ In Visual Studio Code:
 - Press Ctrl+Shift+B (Cmd+Shift+B on Mac) to compile the client and server.
 - Run `npm run prepare-tests` in the `vscode/client` folder.
 - Switch to the Debug viewlet.
-- Select `Langauge Server E2E Test` from the drop down.
+- Select `Language Server E2E Test` from the drop down.
 - Run the test config.
 - An additional editor will momentarily open while the tests are run. It will close automatically once they are complete.
 - Switch to the output view with Ctrl+Shift+U (Cmd+Shift+U on Mac) to see the results of the tests.

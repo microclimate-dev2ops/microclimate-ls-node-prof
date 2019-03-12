@@ -1,6 +1,6 @@
 # Microclimate Language Server for Node.js Profiling
 
-Annoates your Node.js code with code highlighting for your hottest functions in your Microclimate projects.
+Annotates your Node.js code with code highlighting for your hottest functions in your Microclimate projects.
 
 This extension provides code highlighting showing relative time spent in JavaScript functions based on profiling data gathered through Microclimate Load Testing.
 
