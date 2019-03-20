@@ -15,6 +15,7 @@ import {
   DiagnosticSeverity,
   Position,
 } from 'vscode-languageserver';
+import { shortName } from './config';
 import Tree from './Tree';
 import TreeNode from './TreeNode';
 import {
@@ -133,7 +134,7 @@ export default class ProfilingManager {
             start: Position.create(this.convertLineNo(displayNode.line), 0),
           },
           severity: DiagnosticSeverity.Warning,
-          source: 'Microclimate Load Runner',
+          source: shortName,
         };
 
         if (hasDiagnosticRelatedInformationCapability) {
