@@ -1,5 +1,5 @@
 {
-	"name": "microclimate-ls-node-prof-vscode-client",
+	"name": "codewind-ls-node-prof-vscode-client",
 	"description": "VSCode Client for the Microclomate Language Server for Node.js profiling",
 	"version": "0.1.0",
 	"author": "IBM",
@@ -13,9 +13,9 @@
 		"vscode": "^1.25.0"
 	},
 	"scripts": {
+		"test": "node ./node_modules/mocha/bin/_mocha",
 		"update-vscode": "vscode-install",
-		"postinstall": "vscode-install",
-		"prepare-tests": "echo $(rm -rf ./out/test/microclimate-workspace) && cp -R ./src/test/microclimate-workspace ./out/test/microclimate-workspace"
+		"postinstall": "vscode-install"
 	},
 	"dependencies": {
 		"vscode-languageclient": "^4.1.4"

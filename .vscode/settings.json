@@ -1,5 +1,6 @@
 {
 	"editor.insertSpaces": false,
 	"tslint.enable": true,
-	"typescript.preferences.quoteStyle": "single"
+	"typescript.preferences.quoteStyle": "single",
+	"codewindProfiling.showProfiling": false
 }

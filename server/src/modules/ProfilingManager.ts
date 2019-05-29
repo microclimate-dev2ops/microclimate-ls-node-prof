@@ -51,11 +51,11 @@ export default class ProfilingManager {
   public getDiagnosticsForFile(
     codePath: string,
     profilingPath: string,
+    projectFolders: string[],
     hasDiagnosticRelatedInformationCapability: boolean,
   ): Diagnostic[] {
-    const removePattern: RegExp = /.*\/microclimate-workspace\/[A-z0-9-_]+\//;
-    const localPath: string = removePattern.exec(codePath)[0];
-    const appCodePath: string = codePath.replace(removePattern, '/app/');
+    const localPath: string = this.getProjectDirectory(codePath, projectFolders);
+    const appCodePath: string = this.convertToAppDirectory(codePath, localPath);
 
     // read file into tree
     const start: number = Date.now();
@@ -63,7 +63,21 @@ export default class ProfilingManager {
     const tree: Tree = this.findOrCreateTree(profilingPath);
     this.connection.console.info(`Done parsing: ${profilingPath} in ${Date.now() - start}`);
     const nodes: TreeNode[] = this.getNodesInFile(tree, appCodePath);
+    this.connection.console.log(inspect(nodes));
     return this.createDiagnostics(tree, nodes, localPath, hasDiagnosticRelatedInformationCapability);
+  }
+
+  private getProjectDirectory(filePath: string, projectFolders: string[]): string {
+    const projectPath: string[] = projectFolders.filter((folderPath: string) => filePath.includes(folderPath));
+
+    return projectPath.length >= 1 ? projectPath[0] : '';
+  }
+
+  private convertToAppDirectory(filePath: string, localPath: string): string {
+    let updatedFilePath: string = filePath.replace('file://', '');
+    updatedFilePath = updatedFilePath.replace(localPath, '/app');
+
+    return updatedFilePath;
   }
 
   private findOrCreateTree(profilingPath: string): Tree {

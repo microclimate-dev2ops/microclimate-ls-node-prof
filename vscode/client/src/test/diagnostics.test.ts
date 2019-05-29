@@ -8,7 +8,6 @@
  ******************************************************************************/
 'use strict';
 
-
 import * as assert from 'assert';
 import * as vscode from 'vscode';
 import { activate, getDocUri } from './helper';
@@ -22,13 +21,13 @@ describe('Should get diagnostics', () => {
         message: 'Function example accumulated 55 ticks',
         range: toRange(6, 0, 6, 9999),
         severity: vscode.DiagnosticSeverity.Warning,
-        source: 'Microclimate Language Server',
+        source: 'Codewind Language Server',
       },
       {
         message: 'Function <anonymous function> accumulated 115 ticks',
         range: toRange(0, 0, 0, 9999),
         severity: vscode.DiagnosticSeverity.Warning,
-        source: 'Microclimate Language Server' },
+        source: 'Codewind Language Server' },
     ]);
   });
 });
@@ -40,7 +39,7 @@ function toRange(sLine: number, sChar: number, eLine: number, eChar: number): vs
 }
 
 async function getDiagnostics(docUri: vscode.Uri): Promise<vscode.Diagnostic[]> {
-  await activate(docUri);
+  // await activate(docUri);
   return vscode.languages.getDiagnostics(docUri);
 }
 

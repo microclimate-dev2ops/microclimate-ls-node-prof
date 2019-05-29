@@ -1,6 +1,6 @@
 {
-	"name": "microclimate-ls-node-prof-server",
-	"description": "Microclimate Language Server for Code Intelligence work",
+	"name": "codewind-ls-node-prof-server",
+	"description": "Codewind Language Server for Code Intelligence work",
 	"version": "0.0.1",
 	"author": "IBM",
 	"license": "",

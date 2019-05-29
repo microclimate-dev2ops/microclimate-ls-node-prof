@@ -26,19 +26,20 @@ import {
   WorkspaceFolder,
   WorkspaceFoldersChangeEvent,
 } from 'vscode-languageserver';
+
 import ProfilingManager from './modules/ProfilingManager';
 
 // There are defaults in package.json but these will be picked up
 // if someone deletes all the settings.
-interface MicroclimateSettings {
+interface CodewindSettings {
   profilingfolder: string;
   showProfiling: boolean;
 }
-const defaultSettings: MicroclimateSettings  = {
+const defaultSettings: CodewindSettings  = {
   profilingfolder: 'load-test',
   showProfiling: false,
 };
-let settings: MicroclimateSettings = defaultSettings;
+let settings: CodewindSettings = defaultSettings;
 
 let projectFolders: string[] = null;
 
@@ -94,11 +95,11 @@ connection.onInitialize((params: InitializeParams) => {
 connection.onInitialized(() => {
   if (hasConfigurationCapability) {
     // Register for all configuration changes.
-    connection.workspace.getConfiguration({ section: 'microclimateProfiling' }).then((result: any) => {
+    connection.workspace.getConfiguration({ section: 'codewindProfiling' }).then((result: any) => {
       try {
         // connection.console.log(`Settings are: ${inspect(settings)}`);
         if (settings) {
-          settings = result as MicroclimateSettings;
+          settings = result as CodewindSettings;
         }
       } catch (err) {
         connection.console.log(inspect(err));
@@ -110,10 +111,10 @@ connection.onInitialized(() => {
   if (canNotifyConfigChanges) {
     connection.client.register(
       DidChangeConfigurationNotification.type,
-      { section: 'microclimateProfiling' },
+      { section: 'codewindProfiling' },
     );
     connection.onDidChangeConfiguration(async (change: DidChangeConfigurationParams) => {
-      settings = change.settings.microclimateProfiling as MicroclimateSettings;
+      settings = change.settings.codewindProfiling as CodewindSettings;
 
       // clear diagnostics if disabled showProfiling
       if (!settings.showProfiling) {
@@ -180,9 +181,9 @@ async function getDiagnostics(textDocument: TextDocumentItem): Promise<void> {
   // Lazily initialize project folders.
   if (!projectFolders) {
     // TODO - This needs to update when new folders are added.
-    projectFolders = await getMicroclimateProjectFolders();
+    projectFolders = await getCodewindProjectFolders();
   }
-  // connection.console.log(inspect(changeEvent));
+  // connection.console.log(inspect(projectFolders));
 
   const url: URL = new URL(textDocument.uri);
   const pathname: string = url.pathname;
@@ -256,23 +257,19 @@ async function getLatestLoadTestResults(projectFolder: string, profilingfolder: 
   return null;
 }
 
-async function getMicroclimateProjectFolders(): Promise<string[]> {
-  const folders: WorkspaceFolder[] = await connection.workspace.getWorkspaceFolders();
-  const mcProjectFolders: string[] = [];
-  for ( const folder of folders) {
+async function getCodewindProjectFolders(): Promise<string[]> {
+  const workspaceFolders: WorkspaceFolder[] = await connection.workspace.getWorkspaceFolders();
+  const cwProjectFolders: string[] = [];
+  for ( const folder of workspaceFolders) {
     connection.console.log('getMicrocliamteProjectFolders - found folder: ' + inspect(folder));
     const url: URL = new URL(folder.uri);
     const pathname: string = url.pathname;
     connection.console.log('Pathname is: ' + pathname);
-    // How to associate profiling files with files in repo.
-    // - Paths should match up to '<mc-workspace>/<project>/load-test'.
-    // - Assume a well behaved microclimate app, at least initially,
-    //   that moves all it's files into /app.
-    // Just use most recent performance results.
+
     const workspaceProjectFolders: string[] = await searchForFolders(pathname, settings.profilingfolder);
-    mcProjectFolders.push(...workspaceProjectFolders);
+    cwProjectFolders.push(...workspaceProjectFolders);
   }
-  return mcProjectFolders;
+  return cwProjectFolders;
 }
 
 async function searchForFolders(pathname: string, name: string): Promise<string[]> {
@@ -307,7 +304,7 @@ async function searchForFolders(pathname: string, name: string): Promise<string[
 async function highlightFunctions(textDocument: TextDocumentItem, profilingPath: string): Promise<void> {
   try {
     const diagnostics: Diagnostic[] = profilingManager.getDiagnosticsForFile(
-      textDocument.uri, profilingPath, hasDiagnosticRelatedInformationCapability,
+      textDocument.uri, profilingPath, projectFolders, hasDiagnosticRelatedInformationCapability,
     );
     highlightedTextDocuments.set(textDocument, diagnostics);
     connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });

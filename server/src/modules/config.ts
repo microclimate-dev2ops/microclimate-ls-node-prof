@@ -1,1 +1,1 @@
-export const shortName: string = 'Microclimate Profiling';
+export const shortName: string = 'Codewind Profiling';
