@@ -25,7 +25,7 @@ export let platformEol: string;
 const workspacePath: string = path.resolve(__dirname, 'workspace');
 export async function activate(docUri: vscode.Uri): Promise<void> {
   // The extensionId is `publisher.name` from package.json
-  const ext: Extension<any> = vscode.extensions.getExtension('IBM.codewind-code-intelligence');
+  const ext: Extension<any> = vscode.extensions.getExtension('IBM.codewind-ls-node-prof');
   await ext.activate();
   try {
     await vscode.workspace.updateWorkspaceFolders(0, null, { uri: Uri.file(workspacePath) });

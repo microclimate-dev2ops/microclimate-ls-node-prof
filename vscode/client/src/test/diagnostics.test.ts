@@ -18,13 +18,13 @@ describe('Should get diagnostics', () => {
   it('Generates the message and displays at the right line', async () => {
     await testDiagnostics(docUri, [
       {
-        message: 'Function example accumulated 55 ticks',
+        message: 'Function example() was the running function in 30.22% of samples.',
         range: toRange(6, 0, 6, 9999),
         severity: vscode.DiagnosticSeverity.Warning,
         source: 'Codewind Language Server',
       },
       {
-        message: 'Function <anonymous function> accumulated 115 ticks',
+        message: 'Function <anonymous function> was the running function in 63.19% of samples.',
         range: toRange(0, 0, 0, 9999),
         severity: vscode.DiagnosticSeverity.Warning,
         source: 'Codewind Language Server' },
@@ -39,7 +39,7 @@ function toRange(sLine: number, sChar: number, eLine: number, eChar: number): vs
 }
 
 async function getDiagnostics(docUri: vscode.Uri): Promise<vscode.Diagnostic[]> {
-  // await activate(docUri);
+  await activate(docUri);
   return vscode.languages.getDiagnostics(docUri);
 }
 
@@ -50,8 +50,6 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
 
   expectedDiagnostics.forEach((expectedDiagnostic: vscode.Diagnostic, i: number) => {
     const actualDiagnostic: vscode.Diagnostic = actualDiagnostics[i];
-    console.dir(actualDiagnostic);
-
     assert.equal(actualDiagnostic.message, expectedDiagnostic.message);
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
