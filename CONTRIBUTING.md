@@ -5,7 +5,7 @@
 With Visual Studio Code:
 
 - Clone this repository locally.
-- Run `npm install` in the cloned `microclimate-ls-node-prof` folder. This installs all necessary npm modules in both the client and server folder
+- Run `npm install` in the cloned `codewind-ls-node-prof` folder. This installs all necessary npm modules in both the client and server folder
 - Open the clone of this repository in Visual Studio Code.
 - Press Ctrl+Shift+B (Cmd+Shift+B on Mac) to compile the client and server.
 - Switch to the Debug viewlet.
@@ -16,7 +16,7 @@ With Visual Studio Code:
 
 Setup:
 
-- Run `npm install` in the `microclimate-ls-node-prof` folder.
+- Run `npm install` in the `codewind-ls-node-prof` folder.
 
 In Visual Studio Code:
 
@@ -32,14 +32,14 @@ In Visual Studio Code:
 
 To build a `.vsix` extension package that can then be installed/published:
 
-- Run `npm install` in the `microclimate-ls-node-prof` folder.
+- Run `npm install` in the `codewind-ls-node-prof` folder.
 - Install the `vsce` package globally with `npm install -g vsce`.
-- Run `vsce package` in the `microclimate-ls-node-prof` folder.
+- Run `vsce package` in the `codewind-ls-node-prof` folder.
 - A `.vsix` file will then be generated.
 
 To install the extension:
 
-- Run `code --install-extension <name of generated vsix file>` in the `microclimate-ls-node-prof` folder.
+- Run `code --install-extension <name of generated vsix file>` in the `codewind-ls-node-prof` folder.
 - Restart Visual Studio Code.
 - The extension should appear in your list of installed extensions.
 

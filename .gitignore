@@ -9,3 +9,4 @@ build.json
 .settings
 package-lock.json
 **.vsix
+.vscode-test/

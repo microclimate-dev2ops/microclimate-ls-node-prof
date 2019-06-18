@@ -1,7 +1,7 @@
 {
-	"name": "microclimate-ls-node-prof",
-	"displayName": "Microclimate Language Server for Node.js Profiling",
-	"description": "Code Highlighting for Microclimate's JavaScript Load Testing",
+	"name": "codewind-ls-node-prof",
+	"displayName": "Codewind Language Server for Node.js Profiling",
+	"description": "Code Highlighting for Codewind's JavaScript Load Testing",
 	"version": "19.3.0",
 	"author": "IBM",
 	"publisher": "IBM",
@@ -12,7 +12,7 @@
 		"Other"
 	],
 	"keywords": [
-		"Microclimate",
+		"Codewind",
 		"Profiling",
 		"JavaScript",
 		"Load",
@@ -40,34 +40,34 @@
 			{
 				"command": "extension.toggleProfiling",
 				"title": "Toggle Profiling",
-				"category": "Microclimate Profiling"
+				"category": "Codewind Profiling"
 			}
 		],
 		"menus": {
 			"editor/context": [
 				{
 					"command": "extension.toggleProfiling",
-					"group": "2_microclimate@1"
+					"group": "2_codewind@1"
 				}
 			]
 		},
 		"configuration": {
 			"type": "object",
-			"title": "Microclimate Profiling Configuration",
+			"title": "Codewind Profiling Configuration",
 			"properties": {
-				"microclimateProfiling.showProfiling": {
+				"codewindProfiling.showProfiling": {
 					"scope": "resource",
 					"type": "boolean",
 					"default": true,
 					"description": "Whether the method profiling information should be displayed in the editor pane."
 				},
-				"microclimateProfiling.profilingfolder": {
+				"codewindProfiling.profilingfolder": {
 					"scope": "resource",
 					"type": "string",
 					"default": "load-test",
 					"description": "The folder name containing load-test results files."
 				},
-				"microclimateProfiling.trace.server": {
+				"codewindProfiling.trace.server": {
 					"scope": "resource",
 					"type": "string",
 					"enum": [
@@ -89,7 +89,8 @@
 		"watch:server": "tsc -w -p ./server/tsconfig.json",
 		"watch": "tsc -b -w ./vscode/client/tsconfig.json ./server/tsconfig.json",
 		"compile": "npm run compile:client && npm run compile:server",
-		"postinstall": "cd vscode/client && npm install && cd ../../server && npm install && cd .."
+		"postinstall": "cd vscode/client && npm install && cd ../../server && npm install && cd ..",
+		"test": "sh ./scripts/e2e.sh"
 	},
 	"devDependencies": {
 		"@types/mocha": "^5.2.5",

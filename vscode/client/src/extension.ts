@@ -8,7 +8,15 @@
  ******************************************************************************/
 
 import * as path from 'path';
-import { commands, ExtensionContext, window, workspace, WorkspaceConfiguration, StatusBarAlignment, StatusBarItem } from 'vscode';
+import {
+  commands,
+  ExtensionContext,
+  StatusBarAlignment,
+  StatusBarItem,
+  window,
+  workspace,
+  WorkspaceConfiguration,
+} from 'vscode';
 
 import {
   Disposable,
@@ -18,7 +26,7 @@ import {
   TransportKind,
 } from 'vscode-languageclient';
 
-const CONFIG_SECTION: string = 'microclimateProfiling';
+const CONFIG_SECTION: string = 'codewindProfiling';
 const CONFIG_SHOW_PROFILING: string = 'showProfiling';
 const TOGGLE_COMMAND_ID: string = 'extension.toggleProfiling';
 
@@ -46,7 +54,7 @@ export function activate(context: ExtensionContext): void {
   const clientOptions: LanguageClientOptions = {
     // Register the server for javascript files
     documentSelector: [{ scheme: 'file', language: 'javascript' }],
-    outputChannelName: 'Microclimate Language Server',
+    outputChannelName: 'Codewind Language Server',
     synchronize: {
       // Notify the server about file changes to '.clientrc files contained in the workspace
       fileEvents: workspace.createFileSystemWatcher('**/*.{js,json}'),
@@ -55,8 +63,8 @@ export function activate(context: ExtensionContext): void {
 
   // Create the language client and start the client.
   client = new LanguageClient(
-    'microclimateLanguageServer',
-    'Microclimate Language Server',
+    'codewindLanguageServer',
+    'Codewind Language Server',
     serverOptions,
     clientOptions,
   );
@@ -66,12 +74,10 @@ export function activate(context: ExtensionContext): void {
     const newShowProfiling: boolean = !isShowProfiling();
     const config: WorkspaceConfiguration = workspace.getConfiguration(CONFIG_SECTION);
     config.update(CONFIG_SHOW_PROFILING, newShowProfiling);
-    // const req: RequestType<
-    // client.sendRequest()
     setStatusBarMessage(newShowProfiling);
 
     window.showInformationMessage(
-      `Microclimate Profiling: Method profiling ${ newShowProfiling ? 'enabled' : 'disabled' }.`,
+      `Codewind Profiling: Method profiling ${ newShowProfiling ? 'enabled' : 'disabled' }.`,
     );
   });
 
@@ -102,7 +108,7 @@ function isShowProfiling(): boolean {
 // only undefined initially (on activation); will be present the rest of the time.
 let statusBarItem: StatusBarItem | undefined;
 
-function setStatusBarMessage(profilingEnabled: boolean) {
+function setStatusBarMessage(profilingEnabled: boolean): void {
   if (statusBarItem != null) {
     statusBarItem.dispose();
   }
@@ -110,8 +116,8 @@ function setStatusBarMessage(profilingEnabled: boolean) {
   // Priority 1000 is totally arbitrary, I like having it as left as possible.
   statusBarItem = window.createStatusBarItem(StatusBarAlignment.Right, 1000);
   // https://octicons.github.com/icon/dashboard/
-  statusBarItem.text = `$(dashboard) ${profilingEnabled ? "Profiling on " : "Profiling off"}`;
+  statusBarItem.text = `$(dashboard) ${ profilingEnabled ? 'Profiling on ' : 'Profiling off' }`;
   statusBarItem.command = TOGGLE_COMMAND_ID;
-  statusBarItem.tooltip = "Click to toggle";
+  statusBarItem.tooltip = 'Click to toggle';
   statusBarItem.show();
 }

@@ -8,26 +8,27 @@
  ******************************************************************************/
 'use strict';
 
-import * as vscode from 'vscode';
 import * as path from 'path';
+import * as vscode from 'vscode';
+import {
+  Extension,
+  Range,
+  TextEditorEdit,
+  Uri,
+ } from 'vscode';
 
 export let doc: vscode.TextDocument;
 export let editor: vscode.TextEditor;
 export let documentEol: string;
 export let platformEol: string;
 
-const workspacePath: string = path.resolve(__dirname, 'microclimate-workspace');
-/**
- * Activates the vscode.lsp-sample extension
- */
-export async function activate(docUri: vscode.Uri) {
+const workspacePath: string = path.resolve(__dirname, 'workspace');
+export async function activate(docUri: vscode.Uri): Promise<void> {
   // The extensionId is `publisher.name` from package.json
-  // console.log(vscode.extensions);
-
-  const ext = vscode.extensions.getExtension('IBM.microclimate-code-intelligence');
+  const ext: Extension<any> = vscode.extensions.getExtension('IBM.codewind-ls-node-prof');
   await ext.activate();
   try {
-    await vscode.workspace.updateWorkspaceFolders(0, null, { uri: vscode.Uri.file(workspacePath) });
+    await vscode.workspace.updateWorkspaceFolders(0, null, { uri: Uri.file(workspacePath) });
     doc = await vscode.workspace.openTextDocument(docUri);
     editor = await vscode.window.showTextDocument(doc);
     await sleep(2000); // Wait for server activation
@@ -36,21 +37,22 @@ export async function activate(docUri: vscode.Uri) {
   }
 }
 
-export async function sleep(ms: number) {
+export async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const getDocPath = (p: string) => {
+export function getDocPath(p: string): string {
   return path.resolve(workspacePath, 'project', p);
-};
-export const getDocUri = (p: string) => {
+}
+
+export function getDocUri(p: string): Uri {
   return vscode.Uri.file(getDocPath(p));
-};
+}
 
 export async function setTestContent(content: string): Promise<boolean> {
-  const all = new vscode.Range(
+  const all: Range = new vscode.Range(
     doc.positionAt(0),
-    doc.positionAt(doc.getText().length)
+    doc.positionAt(doc.getText().length),
   );
-  return editor.edit(eb => eb.replace(all, content));
+  return editor.edit((eb: TextEditorEdit) => eb.replace(all, content));
 }
